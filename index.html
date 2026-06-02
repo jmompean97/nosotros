@@ -251,7 +251,7 @@
   <div id="modal-form" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="form-modal-title">
     <div class="modal-box">
       <div class="modal-header">
-        <h2 id="form-modal-title">Nuevo evento</h2>
+        <h2 id="form-modal-title">Nuevo recuerdo</h2>
         <button class="modal-close" id="modal-form-close" aria-label="Cerrar">✕</button>
       </div>
       <div class="modal-body">
@@ -266,42 +266,48 @@
 
             <div class="form-group">
               <label class="form-label" for="f-month">Mes *</label>
-              <select id="f-month" class="form-input" required>
-                <option value="">— Mes —</option>
-                <option value="1">Enero</option>
-                <option value="2">Febrero</option>
-                <option value="3">Marzo</option>
-                <option value="4">Abril</option>
-                <option value="5">Mayo</option>
-                <option value="6">Junio</option>
-                <option value="7">Julio</option>
-                <option value="8">Agosto</option>
-                <option value="9">Septiembre</option>
-                <option value="10">Octubre</option>
-                <option value="11">Noviembre</option>
-                <option value="12">Diciembre</option>
-              </select>
+              <div class="select-wrapper">
+                <select id="f-month" class="form-input" required>
+                  <option value="">— Mes —</option>
+                  <option value="1">Enero</option>
+                  <option value="2">Febrero</option>
+                  <option value="3">Marzo</option>
+                  <option value="4">Abril</option>
+                  <option value="5">Mayo</option>
+                  <option value="6">Junio</option>
+                  <option value="7">Julio</option>
+                  <option value="8">Agosto</option>
+                  <option value="9">Septiembre</option>
+                  <option value="10">Octubre</option>
+                  <option value="11">Noviembre</option>
+                  <option value="12">Diciembre</option>
+                </select>
+              </div>
             </div>
 
             <div class="form-group">
               <label class="form-label" for="f-person">Protagonista *</label>
-              <select id="f-person" class="form-input" required>
-                <option value="juntos">Juntos</option>
-                <option value="jorge">Jorge</option>
-                <option value="gema">Gema</option>
-              </select>
+              <div class="select-wrapper">
+                <select id="f-person" class="form-input" required>
+                  <option value="juntos">Juntos</option>
+                  <option value="jorge">Jorge</option>
+                  <option value="gema">Gema</option>
+                </select>
+              </div>
             </div>
 
             <div class="form-group">
               <label class="form-label" for="f-category">Categoría</label>
-              <select id="f-category" class="form-input">
-                <option value="hito">Hito</option>
-                <option value="viaje">Viaje</option>
-                <option value="estudios">Estudios</option>
-                <option value="trabajo">Trabajo</option>
-                <option value="vida" selected>Vida</option>
-                <option value="familia">Familia</option>
-              </select>
+              <div class="select-wrapper">
+                <select id="f-category" class="form-input">
+                  <option value="hito">Hito</option>
+                  <option value="viaje">Viaje</option>
+                  <option value="estudios">Estudios</option>
+                  <option value="trabajo">Trabajo</option>
+                  <option value="vida" selected>Vida</option>
+                  <option value="familia">Familia</option>
+                </select>
+              </div>
             </div>
 
             <div class="form-group full">
@@ -311,7 +317,7 @@
 
             <div class="form-group full">
               <label class="form-label" for="f-desc">Descripción</label>
-              <textarea id="f-desc" class="form-input" placeholder="Cuéntanos más..." rows="3"></textarea>
+              <textarea id="f-desc" class="form-input" placeholder="Cuéntanos más sobre este momento..." rows="3"></textarea>
             </div>
 
             <div class="form-group full">
@@ -320,13 +326,13 @@
               <div id="form-dropzone" class="dropzone" role="button" tabindex="0"
                 aria-label="Zona de subida de imágenes">
                 <strong>Arrastra fotos aquí</strong> o haz clic para seleccionar<br>
-                <small style="color:var(--text2)">JPG, PNG, WEBP · Múltiples archivos permitidos</small>
+                <small style="color:var(--text2)">JPG · PNG · WEBP · múltiples archivos</small>
               </div>
               <div id="form-img-preview" class="upload-preview"></div>
-              <small id="form-imgbb-note" style="color:var(--text2);font-size:.72rem;margin-top:.4rem;display:block">
-                💡 Sin API key de ImgBB configurada: las imágenes se guardan como base64 localmente.
+              <small id="form-imgbb-note" style="color:var(--text2);font-size:.72rem;margin-top:.5rem;display:block;line-height:1.5">
+                Sin API key de ImgBB las imágenes se guardan en local (base64).
                 <a href="https://api.imgbb.com/" target="_blank" rel="noopener"
-                  style="color:var(--color-primary)">Obtener key gratuita →</a>
+                  style="color:var(--color-primary);text-decoration:underline;text-underline-offset:2px">Obtener key gratuita →</a>
               </small>
             </div>
 
@@ -334,7 +340,7 @@
 
           <div class="form-actions">
             <button type="button" class="btn-secondary" id="form-cancel">Cancelar</button>
-            <button type="submit" class="btn-primary">Guardar</button>
+            <button type="submit" class="btn-primary">Guardar recuerdo</button>
           </div>
         </form>
       </div>
