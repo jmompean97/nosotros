@@ -615,3 +615,28 @@
     display: none !important;
   }
 }
+
+
+/* ─────────────────────────────────────────────────────────────
+   THEME TOGGLE SVG ANIMATION
+───────────────────────────────────────────────────────────── */
+.btn-theme-toggle {
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-theme-toggle:hover {
+  transform: scale(1.05);
+  background: var(--bg2);
+  color: var(--text);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-theme-toggle svg {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.3s ease;
+}
+
+.btn-theme-toggle:hover svg {
+  transform: rotate(35deg) scale(1.1);
+}
