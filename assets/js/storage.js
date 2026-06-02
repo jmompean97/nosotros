@@ -104,8 +104,35 @@ const Storage = (() => {
     return subscription;
   }
 
-  function save(events) {
+  async function save(events) {
     localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(events));
+    if (_supabase) {
+      // 1. Borrar todos los eventos actuales de Supabase
+      const { error: deleteError } = await _supabase.from('events').delete().neq('id', 'non_existent_id');
+      if (deleteError) throw deleteError;
+
+      // 2. Insertar en lote los nuevos registros importados
+      if (events && events.length > 0) {
+        const cleanEvents = events.map(e => ({
+          id: e.id,
+          date: e.date,
+          year: parseInt(e.year) || new Date(e.date).getFullYear(),
+          month: parseInt(e.month) || (new Date(e.date).getMonth() + 1),
+          title: e.title || '',
+          description: e.description || '',
+          person: e.person || 'juntos',
+          category: e.category || 'vida',
+          emoji: e.emoji || '',
+          images: Array.isArray(e.images) ? e.images : [],
+          tags: Array.isArray(e.tags) ? e.tags : [],
+          createdAt: e.createdAt || new Date().toISOString(),
+          updatedAt: e.updatedAt || new Date().toISOString()
+        }));
+
+        const { error: insertError } = await _supabase.from('events').insert(cleanEvents);
+        if (insertError) throw insertError;
+      }
+    }
   }
 
   function exportJSON(events) {

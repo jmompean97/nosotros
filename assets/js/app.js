@@ -63,10 +63,13 @@ const App = (() => {
       if (!f) return;
       try {
         const data = await Storage.importJSON(f);
-        Storage.save(data);
+        await Storage.save(data);
         await EventsStore.init();
         Toast.show('Datos importados correctamente');
-      } catch(err) { Toast.show('Error al importar el fichero', 'error'); }
+      } catch(err) {
+        console.error('Error al importar datos:', err);
+        Toast.show('Error al importar el fichero', 'error');
+      }
     });
 
     document.getElementById('btn-search')?.addEventListener('input', e => {
