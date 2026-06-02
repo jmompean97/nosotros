@@ -22,7 +22,19 @@
   <header id="main-header">
     <a class="header-logo" href="#" aria-label="Inicio">
       <span class="logo-g">G</span>
-      <span class="logo-heart">♥</span>
+      <svg class="logo-heart-svg" viewBox="0 0 24 24" width="22" height="22" stroke="url(#logo-heart-grad)" stroke-width="2.5" fill="url(#logo-heart-fill-grad)" stroke-linecap="round" stroke-linejoin="round">
+        <defs>
+          <linearGradient id="logo-heart-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="var(--color-gema)" />
+            <stop offset="100%" stop-color="var(--color-jorge)" />
+          </linearGradient>
+          <linearGradient id="logo-heart-fill-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="var(--color-gema)" stop-opacity="0.12" />
+            <stop offset="100%" stop-color="var(--color-jorge)" stop-opacity="0.12" />
+          </linearGradient>
+        </defs>
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
       <span class="logo-j">J</span>
       <span class="logo-text">nuestra historia</span>
     </a>
