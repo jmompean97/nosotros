@@ -5,6 +5,8 @@ Una aplicación web personal para guardar y visualizar los momentos más importa
 ## ✨ Características
 
 - **Timeline vertical y horizontal** — cambia entre vistas con un clic
+- **Agrupación por mes** — los eventos del mismo mes comparten un único punto central
+- **Punto multicolor** — el punto se pinta con un `conic-gradient` y cada color apunta hacia la tarjeta de su protagonista; las tarjetas ramifican desde ese punto común
 - **Filtros** por protagonista (Juntos, Jorge, Gema), categoría y año
 - **Búsqueda** en tiempo real por título o descripción
 - **Añadir / editar / eliminar eventos** con formulario integrado
@@ -26,6 +28,20 @@ Luego abre el navegador en **http://localhost:8080**
 > ```bash
 > python3 -m http.server 3000
 > ```
+
+## 🛑 Cómo parar el servidor
+
+Si lo lanzaste en una terminal abierta, basta con pulsar **`Ctrl + C`** en esa terminal.
+
+Si quedó corriendo en segundo plano, busca el proceso por su puerto y mátalo:
+
+```bash
+# Ver qué proceso ocupa el puerto 8080
+lsof -ti:8080
+
+# Pararlo directamente
+kill $(lsof -ti:8080)
+```
 
 ## 📁 Estructura del proyecto
 
