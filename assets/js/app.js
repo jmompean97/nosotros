@@ -424,11 +424,16 @@ const App = (() => {
     const logoutBtnDesktop = document.getElementById('btn-logout-desktop');
     const logoutBtnMobile = document.getElementById('btn-logout-mobile');
 
+    const btnExport = document.getElementById('btn-export');
+    const btnImport = document.getElementById('btn-import');
+
     if (!isConfigured) {
       if (loginBtnDesktop) loginBtnDesktop.style.display = 'none';
       if (loginBtnMobile) loginBtnMobile.style.display = 'none';
       if (logoutBtnDesktop) logoutBtnDesktop.style.display = 'none';
       if (logoutBtnMobile) logoutBtnMobile.style.display = 'none';
+      if (btnExport) btnExport.style.display = '';
+      if (btnImport) btnImport.style.display = '';
       
       const btnAdd = document.getElementById('btn-add-event');
       if (btnAdd) btnAdd.style.display = '';
@@ -446,6 +451,8 @@ const App = (() => {
       if (loginBtnMobile) loginBtnMobile.style.display = 'none';
       if (logoutBtnDesktop) logoutBtnDesktop.style.display = '';
       if (logoutBtnMobile) logoutBtnMobile.style.display = '';
+      if (btnExport) btnExport.style.display = '';
+      if (btnImport) btnImport.style.display = '';
 
       const btnAdd = document.getElementById('btn-add-event');
       if (btnAdd) btnAdd.style.display = '';
@@ -466,6 +473,8 @@ const App = (() => {
       if (loginBtnMobile) loginBtnMobile.style.display = '';
       if (logoutBtnDesktop) logoutBtnDesktop.style.display = 'none';
       if (logoutBtnMobile) logoutBtnMobile.style.display = 'none';
+      if (btnExport) btnExport.style.display = 'none';
+      if (btnImport) btnImport.style.display = 'none';
 
       const btnAdd = document.getElementById('btn-add-event');
       if (btnAdd) btnAdd.style.display = 'none';
