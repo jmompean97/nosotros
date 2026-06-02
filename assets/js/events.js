@@ -1,6 +1,6 @@
 const EventsStore = (() => {
   let _events = [];
-  let _filters = { person: 'all', category: 'all', year: null, search: '' };
+  let _filters = { person: 'all', category: 'all', year: null };
   let _sortOrder = 'asc';
   const _subscribers = [];
 
@@ -19,10 +19,6 @@ const EventsStore = (() => {
       if (_filters.person !== 'all' && ev.person !== _filters.person) return false;
       if (_filters.category !== 'all' && ev.category !== _filters.category) return false;
       if (_filters.year && ev.year !== _filters.year) return false;
-      if (_filters.search) {
-        const q = _filters.search.toLowerCase();
-        if (!ev.title.toLowerCase().includes(q) && !ev.description.toLowerCase().includes(q)) return false;
-      }
       return true;
     });
     if (_sortOrder === 'desc') {

@@ -92,10 +92,6 @@ const App = (() => {
         Toast.show('Error al importar el fichero', 'error');
       }
     });
-
-    document.getElementById('btn-search')?.addEventListener('input', e => {
-      EventsStore.setFilter('search', e.target.value.trim());
-    });
   }
 
   /* ── Filters ── */
