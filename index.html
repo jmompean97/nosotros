@@ -27,8 +27,19 @@
     </a>
 
     <div class="header-actions">
-      <button id="btn-login-mobile" class="icon-btn" title="Iniciar sesión" aria-label="Iniciar sesión">🔑</button>
-      <button id="btn-logout-mobile" class="icon-btn" title="Cerrar sesión" aria-label="Cerrar sesión" hidden>🚪</button>
+      <button id="btn-login-mobile" class="icon-btn" title="Iniciar sesión" aria-label="Iniciar sesión">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+      </button>
+      <button id="btn-logout-mobile" class="icon-btn" title="Cerrar sesión" aria-label="Cerrar sesión" hidden>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+          <polyline points="16 17 21 12 16 7" />
+          <line x1="21" y1="12" x2="9" y2="12" />
+        </svg>
+      </button>
       <button id="btn-theme" class="icon-btn btn-theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">☀️</button>
       <button id="btn-hamburger" class="icon-btn hamburger-btn" aria-label="Abrir menú" aria-expanded="false"
         aria-controls="mobile-menu">
@@ -103,8 +114,19 @@
       </div>
 
       <div class="header-right-actions">
-        <button id="btn-login-desktop" class="icon-btn theme-desktop" title="Iniciar sesión" aria-label="Iniciar sesión">🔑</button>
-        <button id="btn-logout-desktop" class="icon-btn theme-desktop" title="Cerrar sesión" aria-label="Cerrar sesión" hidden>🚪</button>
+        <button id="btn-login-desktop" class="icon-btn theme-desktop" title="Iniciar sesión" aria-label="Iniciar sesión">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+        </button>
+        <button id="btn-logout-desktop" class="icon-btn theme-desktop" title="Cerrar sesión" aria-label="Cerrar sesión" hidden>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </button>
         <button id="btn-theme-desktop" class="icon-btn btn-theme-toggle theme-desktop" title="Cambiar tema" aria-label="Cambiar tema">☀️</button>
         <button id="btn-add-event" class="btn-primary" aria-label="Añadir evento">+ Añadir</button>
         <div style="display:flex;gap:.4rem">
@@ -261,22 +283,24 @@
 
   <!-- ══ LOGIN MODAL ══ -->
   <div id="modal-login" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="login-modal-title">
-    <div class="modal-box" style="max-width: 380px;">
-      <div class="modal-header">
-        <h2 id="login-modal-title">Iniciar Sesión</h2>
-        <button class="modal-close" id="modal-login-close" aria-label="Cerrar">✕</button>
+    <div class="modal-box" style="max-width: 400px; padding: 0; overflow: hidden;">
+      <div class="login-banner" style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); padding: 2rem 1.5rem; text-align: center; color: #fff; position: relative;">
+        <button class="modal-close" id="modal-login-close" aria-label="Cerrar" style="position: absolute; top: 1rem; right: 1rem; color: rgba(255,255,255,0.8); background: rgba(0,0,0,0.15);">✕</button>
+        <div style="font-size: 2.2rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));">❤️</div>
+        <h2 id="login-modal-title" style="font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.25rem;">Nuestra Historia</h2>
+        <p style="font-size: 0.78rem; opacity: 0.85; font-weight: 500;">Accede para gestionar vuestro timeline</p>
       </div>
-      <div class="modal-body">
-        <form id="form-login" novalidate>
-          <div class="form-group" style="margin-bottom: 1rem;">
+      <div class="modal-body" style="padding: 2rem 1.75rem;">
+        <form id="form-login" novalidate style="display: flex; flex-direction: column; gap: 1.2rem;">
+          <div class="form-group">
             <label class="form-label" for="l-email">Correo Electrónico</label>
-            <input id="l-email" class="form-input" type="email" placeholder="amor@ejemplo.com" required>
+            <input id="l-email" class="form-input" type="email" placeholder="amor@ejemplo.com" required style="padding: 0.65rem 0.85rem; font-size: 0.9rem;">
           </div>
-          <div class="form-group" style="margin-bottom: 1.5rem;">
+          <div class="form-group">
             <label class="form-label" for="l-password">Contraseña</label>
-            <input id="l-password" class="form-input" type="password" placeholder="••••••••" required>
+            <input id="l-password" class="form-input" type="password" placeholder="••••••••" required style="padding: 0.65rem 0.85rem; font-size: 0.9rem;">
           </div>
-          <button type="submit" class="btn-primary" style="width: 100%;">Acceder</button>
+          <button type="submit" class="btn-primary" style="width: 100%; padding: 0.75rem; font-size: 0.9rem; font-weight: 600; margin-top: 0.5rem; border-radius: var(--radius-sm); box-shadow: 0 4px 12px hsla(340, 70%, 60%, 0.25);">Acceder</button>
         </form>
       </div>
     </div>
