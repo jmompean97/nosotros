@@ -576,3 +576,85 @@ select.form-input option {
   transform: translateY(-3px);
   box-shadow: 0 6px 24px hsla(265, 60%, 65%, .45);
 }
+
+
+/* ─────────────────────────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────────────────────────── */
+#main-footer {
+  margin-top: auto;
+  padding: 3rem 1.5rem;
+  background: linear-gradient(to top, var(--bg1), transparent);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.footer-container {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.footer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 50px;
+  background: hsla(230, 25%, 15%, 0.3);
+  border: 1px solid hsla(0, 0%, 100%, 0.02);
+  margin-bottom: 0.2rem;
+}
+
+[data-theme="light"] .footer-logo {
+  background: hsla(30, 40%, 95%, 0.4);
+  border: 1px solid hsla(0, 0%, 0%, 0.02);
+}
+
+.footer-logo-g,
+.footer-logo-j {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.footer-logo-g {
+  background-image: linear-gradient(135deg, var(--color-gema), hsl(340, 95%, 75%));
+}
+
+.footer-logo-j {
+  background-image: linear-gradient(135deg, var(--color-jorge), hsl(220, 95%, 75%));
+}
+
+.footer-heart-svg {
+  animation: heartPulse 2.5s cubic-bezier(0.25, 0.8, 0.25, 1) infinite;
+  filter: drop-shadow(0 1px 4px hsla(340, 70%, 60%, 0.25));
+  flex-shrink: 0;
+}
+
+.footer-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+.footer-text strong {
+  font-weight: 600;
+}
+
+.footer-subtext {
+  font-size: 0.72rem;
+  color: var(--text2);
+  letter-spacing: 0.03em;
+}

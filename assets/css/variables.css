@@ -82,6 +82,8 @@ body {
   background: var(--bg0);
   color: var(--text);
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   transition:
     background var(--transition),
     color     var(--transition);
