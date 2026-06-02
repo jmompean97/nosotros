@@ -1,0 +1,503 @@
+/* ═══════════════════════════════════════════════════════════════
+   header.css — Header, menú hamburguesa y barra de filtros
+   ═══════════════════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────────────────────────
+   HEADER PRINCIPAL
+───────────────────────────────────────────────────────────── */
+#main-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-h);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   LOGO
+───────────────────────────────────────────────────────────── */
+.header-logo {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.logo-g {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-gema);
+}
+
+.logo-heart {
+  font-size: 1.4rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.logo-j {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-jorge);
+}
+
+.logo-text {
+  font-size: .7rem;
+  color: var(--text2);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-left: .3rem;
+  display: none;
+}
+
+@media (min-width: 600px) {
+  .logo-text {
+    display: block;
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   BOTONES DE CABECERA
+───────────────────────────────────────────────────────────── */
+.view-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.toggle-btn {
+  padding: .4rem .7rem;
+  font-size: .85rem;
+  color: var(--text2);
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.toggle-btn.active {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg1);
+  color: var(--text2);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
+}
+
+.icon-btn:hover {
+  background: var(--bg2);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.btn-primary {
+  padding: .5rem 1.1rem;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: #fff;
+  font-size: .85rem;
+  font-weight: 600;
+  transition:
+    opacity var(--transition),
+    transform var(--transition);
+}
+
+.btn-primary:hover {
+  opacity: .88;
+  transform: translateY(-1px);
+}
+
+#btn-search {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .4rem .75rem;
+  color: var(--text);
+  font-size: .85rem;
+  width: 140px;
+  transition: width var(--transition);
+}
+
+#btn-search:focus {
+  outline: none;
+  width: 180px;
+  border-color: var(--color-primary);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   LAYOUT DESKTOP — menú visible, hamburguesa oculta
+───────────────────────────────────────────────────────────── */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.header-right-actions {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+.header-actions {
+  display: none;
+  align-items: center;
+  gap: .5rem;
+}
+
+@media (min-width: 1090px) {
+  .header-actions {
+    display: none;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   HAMBURGUESA
+───────────────────────────────────────────────────────────── */
+.hamburger-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm) !important;
+  position: relative;
+}
+
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 20px;
+  height: 20px;
+  gap: 4px;
+}
+
+.hamburger-icon span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition:
+    transform .3s cubic-bezier(.4, 0, .2, 1),
+    opacity .2s;
+  transform-origin: center;
+}
+
+/* Animación al abrir → X */
+.hamburger-btn.active .hamburger-icon span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+
+.hamburger-btn.active .hamburger-icon span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburger-btn.active .hamburger-icon span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   FILTROS DESPLEGABLES EN EL HEADER
+───────────────────────────────────────────────────────────── */
+
+.header-filters {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+
+
+/* ── Trigger (botón que abre el dropdown) ── */
+.filter-dropdown {
+  position: relative;
+}
+
+.filter-dd-trigger {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .35rem .65rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg2);
+  color: var(--text);
+  font-size: .8rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition:
+    border-color var(--transition),
+    background var(--transition),
+    color var(--transition);
+}
+
+.filter-dd-trigger:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.filter-dd-trigger[aria-expanded="true"],
+.filter-dd-trigger.open {
+  border-color: var(--color-primary);
+  background: var(--bg1);
+  color: var(--color-primary);
+}
+
+
+/* ── Flecha giratoria ── */
+.dd-arrow {
+  stroke: currentColor;
+  flex-shrink: 0;
+  transition: transform .2s cubic-bezier(.4, 0, .2, 1);
+}
+
+.filter-dd-trigger[aria-expanded="true"] .dd-arrow,
+.filter-dd-trigger.open .dd-arrow {
+  transform: rotate(180deg);
+}
+
+
+/* ── Panel desplegable ── */
+.filter-dd-panel {
+  position: absolute;
+  top: calc(100% + .4rem);
+  left: 0;
+  z-index: 110;
+  min-width: 160px;
+  padding: .5rem;
+  background: var(--bg1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .4);
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+  animation: slideDown .2s cubic-bezier(.4, 0, .2, 1);
+}
+
+.filter-dd-panel[hidden] {
+  display: none;
+}
+
+/* Pills de año dentro del dropdown ─ con wrap */
+.filter-dd-panel #year-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  max-width: 220px;
+}
+
+
+/* ── Mobile: panel inline (no absoluto) ── */
+@media (max-width: 1089px) {
+  .header-filters {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .filter-dd-trigger {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .filter-dd-panel {
+    position: static;
+    box-shadow: none;
+    animation: none;
+    margin-top: .3rem;
+  }
+
+  .filter-dd-panel #year-pills {
+    max-width: 100%;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   FILTER CHIPS (dentro de los paneles)
+───────────────────────────────────────────────────────────── */
+
+.filter-chip {
+  padding: .3rem .75rem;
+  border-radius: 20px;
+  font-size: .78rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  text-align: left;
+  transition:
+    background var(--transition),
+    color var(--transition),
+    border-color var(--transition);
+}
+
+.filter-chip:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.filter-chip.active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: transparent;
+}
+
+.filter-chip[data-filter-person="jorge"].active {
+  background: var(--color-jorge);
+}
+
+.filter-chip[data-filter-person="gema"].active {
+  background: var(--color-gema);
+}
+
+.filter-chip[data-filter-cat="viaje"].active {
+  background: var(--color-secondary);
+}
+
+
+/* ── Year pills ── */
+.year-pill {
+  padding: .25rem .65rem;
+  width: 59px;
+  border-radius: 20px;
+  font-size: .75rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+
+.year-pill.active {
+  background: var(--color-accent);
+  color: hsl(30, 30%, 10%);
+  border-color: transparent;
+}
+
+.year-pill:hover:not(.active) {
+  border-color: var(--color-accent);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   MOBILE — menú desplegable
+───────────────────────────────────────────────────────────── */
+@media (max-width: 1089px) {
+  #main-header {
+    padding: 0 1rem;
+  }
+
+  .header-actions {
+    display: flex;
+  }
+
+  .header-right {
+    display: none;
+    position: absolute;
+    top: var(--header-h);
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    align-items: stretch;
+    gap: .75rem;
+    padding: 1rem 1.25rem 1.25rem;
+    background: var(--bg1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, .35);
+    z-index: 99;
+    animation: slideDown .25s cubic-bezier(.4, 0, .2, 1);
+  }
+
+  .header-right.open {
+    display: flex;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  #btn-search {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  #btn-search:focus {
+    width: 100%;
+  }
+
+  .view-toggle {
+    align-self: flex-start;
+  }
+
+  .header-right-actions {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    flex-wrap: wrap;
+  }
+
+  #btn-add-event {
+    flex: 1;
+  }
+
+  .theme-desktop {
+    display: none !important;
+  }
+}

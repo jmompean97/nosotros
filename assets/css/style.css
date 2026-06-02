@@ -1,0 +1,10 @@
+/* ═══════════════════════════════════════════════════
+   style.css — Punto de entrada principal
+   Importa todos los módulos CSS en orden de cascada
+   ═══════════════════════════════════════════════════ */
+
+@import url('variables.css'); /* tokens, temas, reset, scrollbar */
+@import url('header.css');    /* header, hamburguer, filter bar   */
+@import url('timeline.css');  /* timeline vertical + horizontal   */
+@import url('ui.css');        /* modales, form, lightbox, toast,
+                                 FAB, back-to-top                 */

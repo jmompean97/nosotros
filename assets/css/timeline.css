@@ -1,0 +1,529 @@
+/* ═══════════════════════════════════════════════════════════════
+   timeline.css — Timeline vertical, horizontal y cards
+   ═══════════════════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────────────────────────
+   CONTENEDOR PRINCIPAL
+───────────────────────────────────────────────────────────── */
+#timeline-container {
+  min-height: calc(100vh - var(--header-h) - 50px);
+  padding: 2rem 1rem;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   ESTADO VACÍO
+───────────────────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: 5rem 2rem;
+  color: var(--text2);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   TIMELINE VERTICAL
+═══════════════════════════════════════════════════════════════ */
+
+/* Línea central */
+.v-timeline {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.v-timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom,
+      transparent,
+      var(--color-primary) 10%,
+      var(--color-secondary) 50%,
+      var(--color-jorge) 90%,
+      transparent);
+  transform: translateX(-50%);
+}
+
+@media (max-width: 768px) {
+  .v-timeline::before {
+    left: 20px;
+  }
+}
+
+
+/* ── Grupos de año ── */
+.v-year-group {
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.v-year-badge {
+  position: sticky;
+  top: calc(var(--header-h) + 30px);
+  z-index: 20;
+  width: 64px;
+  height: 64px;
+  line-height: 64px;
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: #fff;
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+
+  margin-left: calc(50% - 32px);
+  margin-bottom: 3rem;
+  box-shadow:
+    0 0 0 4px var(--bg0),
+    0 0 0 6px var(--color-primary);
+}
+
+@media (max-width: 768px) {
+  .v-year-badge {
+    margin-left: 0;
+    width: 52px;
+    height: 52px;
+    line-height: 52px;
+    font-size: .9rem;
+    margin-bottom: 1rem;
+  }
+}
+
+
+/* ── Grupos de mes ── */
+.v-month-group {
+  margin-bottom: .5rem;
+}
+
+.v-month-label {
+  text-align: center;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text2);
+  margin: 1rem 0 .5rem;
+}
+
+@media (max-width: 768px) {
+  .v-month-label {
+    text-align: left;
+    padding-left: 3.5rem;
+  }
+}
+
+
+/* ── Wrapper de tarjeta ── */
+.v-card-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  position: relative;
+}
+
+.v-card-wrapper.side-left {
+  flex-direction: row;
+  padding-right: calc(50% + 1rem);
+}
+
+.v-card-wrapper.side-right {
+  padding-left: calc(50% + 1rem);
+}
+
+@media (max-width: 768px) {
+
+  .v-card-wrapper.side-left,
+  .v-card-wrapper.side-right {
+    flex-direction: row;
+    padding-left: 3rem;
+    padding-right: 0;
+  }
+}
+
+
+/* ── Dot de la línea de tiempo ── */
+.v-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--bg0);
+  border: 3px solid var(--text2);
+  transition: transform var(--transition);
+  position: relative;
+  z-index: 2;
+}
+
+.v-dot.person-jorge {
+  border-color: var(--color-jorge);
+}
+
+.v-dot.person-gema {
+  border-color: var(--color-gema);
+}
+
+.v-dot.person-juntos {
+  border-color: var(--color-juntos);
+  background: var(--color-juntos);
+}
+
+.v-card-wrapper:hover .v-dot {
+  transform: scale(1.5);
+}
+
+@media (max-width: 768px) {
+  .v-dot {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .v-card-wrapper:hover .v-dot {
+    transform: translateY(-50%) scale(1.4);
+  }
+}
+
+
+/* ── Tarjeta vertical ── */
+.v-card {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  flex: 1;
+  cursor: pointer;
+
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition),
+    border-color var(--transition);
+}
+
+.v-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.v-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow);
+  border-color: var(--color-primary);
+}
+
+.v-card.person-jorge:hover {
+  border-color: var(--color-jorge);
+}
+
+.v-card.person-gema:hover {
+  border-color: var(--color-gema);
+}
+
+
+/* ── Cover de imagen ── */
+.card-cover {
+  height: 140px;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-cover img {
+  width: 100%;
+  height: 100%;
+}
+
+.card-cover-count {
+  position: absolute;
+  bottom: .4rem;
+  right: .5rem;
+  font-size: .72rem;
+  background: rgba(0, 0, 0, .6);
+  color: #fff;
+  padding: .15rem .4rem;
+  border-radius: 4px;
+}
+
+
+/* ── Cuerpo de la tarjeta ── */
+.card-body {
+  padding: 1rem;
+}
+
+.card-meta {
+  display: flex;
+  gap: .5rem;
+  margin-bottom: .5rem;
+  flex-wrap: wrap;
+}
+
+.card-person,
+.card-cat {
+  font-size: .7rem;
+  padding: .2rem .5rem;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.person-badge-jorge {
+  background: hsla(220, 80%, 60%, .2);
+  color: var(--color-jorge);
+  border: 1px solid hsla(220, 80%, 60%, .3);
+}
+
+.person-badge-gema {
+  background: hsla(340, 70%, 60%, .2);
+  color: var(--color-gema);
+  border: 1px solid hsla(340, 70%, 60%, .3);
+}
+
+.person-badge-juntos {
+  background: hsla(42, 90%, 55%, .2);
+  color: var(--color-juntos);
+  border: 1px solid hsla(42, 90%, 55%, .3);
+}
+
+.card-cat {
+  background: var(--bg2);
+  color: var(--text2);
+  border: 1px solid var(--border);
+}
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: .4rem;
+  line-height: 1.3;
+}
+
+.card-desc {
+  font-size: .82rem;
+  color: var(--text2);
+  line-height: 1.5;
+  margin-bottom: .6rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .3rem;
+  margin-bottom: .6rem;
+}
+
+.tag {
+  font-size: .68rem;
+  background: var(--bg2);
+  color: var(--text2);
+  padding: .15rem .45rem;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+
+.card-btn {
+  font-size: .78rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  transition: gap var(--transition);
+}
+
+.card-btn:hover {
+  gap: .5rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   TIMELINE HORIZONTAL
+═══════════════════════════════════════════════════════════════ */
+
+.h-timeline {
+  overflow-x: auto;
+  padding: 2rem 0;
+  cursor: grab;
+}
+
+.h-timeline:active {
+  cursor: grabbing;
+}
+
+.h-track {
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-height: 400px;
+  width: max-content;
+  padding: 150px 4rem;
+}
+
+.h-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 2px;
+  background: linear-gradient(to right,
+      transparent,
+      var(--color-primary) 5%,
+      var(--color-secondary) 50%,
+      var(--color-jorge) 95%,
+      transparent);
+  transform: translateY(-50%);
+}
+
+.h-year-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .4rem;
+  position: relative;
+  z-index: 2;
+  margin-right: 2rem;
+}
+
+.h-year-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  flex-shrink: 0;
+}
+
+.h-year-marker span {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.h-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-right: 2rem;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity .4s,
+    transform .4s;
+}
+
+.h-node.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.h-node.pos-top {
+  flex-direction: column-reverse;
+}
+
+.h-node.pos-bottom {
+  flex-direction: column;
+}
+
+.h-stem {
+  width: 2px;
+  height: 40px;
+  background: var(--border);
+}
+
+.h-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  transition: transform var(--transition);
+}
+
+.h-dot.person-jorge {
+  background: var(--color-jorge);
+}
+
+.h-dot.person-gema {
+  background: var(--color-gema);
+}
+
+.h-dot.person-juntos {
+  background: var(--color-juntos);
+}
+
+.h-node:hover .h-dot {
+  transform: scale(1.6);
+}
+
+.h-card {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: .5rem .7rem;
+  width: 140px;
+  text-align: center;
+  transition:
+    border-color var(--transition),
+    transform var(--transition);
+}
+
+.h-card.person-jorge:hover {
+  border-color: var(--color-jorge);
+}
+
+.h-card.person-gema:hover {
+  border-color: var(--color-gema);
+}
+
+.h-card.person-juntos:hover {
+  border-color: var(--color-juntos);
+}
+
+.h-node:hover .h-card {
+  transform: translateY(-3px);
+}
+
+.h-card-emoji {
+  display: block;
+  font-size: 1.2rem;
+  margin-bottom: .2rem;
+}
+
+.h-card-title {
+  display: block;
+  font-size: .72rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text);
+}
+
+.h-card-person {
+  display: block;
+  font-size: .75rem;
+  margin-top: .2rem;
+}
+
+.h-date-label {
+  font-size: .65rem;
+  color: var(--text2);
+  white-space: nowrap;
+  margin-top: .3rem;
+}

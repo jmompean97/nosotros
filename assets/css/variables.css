@@ -1,0 +1,125 @@
+/* ═══════════════════════════════════════════════════════════════
+   variables.css — Design tokens, temas y reset global
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600&display=swap');
+
+
+/* ─────────────────────────────────────────────────────────────
+   TOKENS
+───────────────────────────────────────────────────────────── */
+:root {
+  /* Colores de personas */
+  --color-jorge:     hsl(220, 80%, 60%);
+  --color-gema:      hsl(340, 70%, 60%);
+  --color-juntos:    hsl(42,  90%, 55%);
+
+  /* Paleta general */
+  --color-primary:   hsl(340, 70%, 60%);
+  --color-secondary: hsl(265, 60%, 65%);
+  --color-accent:    hsl(42,  90%, 55%);
+
+  /* Espaciado y forma */
+  --radius:     16px;
+  --radius-sm:  8px;
+
+  /* Efectos */
+  --shadow:     0 8px 32px rgba(0, 0, 0, .35);
+  --transition: 0.3s cubic-bezier(.4, 0, .2, 1);
+
+  /* Layout */
+  --header-h: 70px;
+
+  /* Fondos (dark por defecto) */
+  --bg0:   hsl(230, 25%, 8%);
+  --bg1:   hsl(230, 20%, 12%);
+  --bg2:   hsl(230, 18%, 16%);
+  --glass: hsla(230, 25%, 20%, .65);
+
+  /* Texto */
+  --text:   hsl(0, 0%, 93%);
+  --text2:  hsl(230, 15%, 60%);
+
+  /* Bordes */
+  --border: hsla(230, 30%, 60%, .13);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   TEMA CLARO
+───────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --bg0:   hsl(30, 50%, 97%);
+  --bg1:   hsl(30, 40%, 93%);
+  --bg2:   hsl(30, 30%, 87%);
+  --glass: hsla(30, 40%, 98%, .8);
+
+  --text:   hsl(230, 25%, 12%);
+  --text2:  hsl(230, 15%, 40%);
+
+  --border: hsla(230, 30%, 30%, .1);
+  --shadow: 0 8px 32px rgba(0, 0, 0, .12);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   RESET
+───────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg0);
+  color: var(--text);
+  min-height: 100vh;
+  transition:
+    background var(--transition),
+    color     var(--transition);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  object-fit: cover;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   SCROLLBAR
+───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
