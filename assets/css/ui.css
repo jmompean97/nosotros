@@ -529,7 +529,9 @@ select.form-input option {
    TOGGLE SORT (Sub-header)
 ───────────────────────────────────────────────────────────── */
 .sub-header-controls {
-  position: fixed;
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
   top: calc(var(--header-h) + 1rem);
   right: 1.5rem;
   z-index: 80;
@@ -556,7 +558,7 @@ select.form-input option {
 @media (max-width: 768px) {
   .sub-header-controls {
     right: 1rem;
-    top: calc(var(--header-h) + 0.5rem);
+    top: calc(var(--header-h) - 40px);
   }
   .sub-header-btn {
     padding: 0.4rem 0.8rem;
