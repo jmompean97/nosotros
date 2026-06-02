@@ -2,9 +2,22 @@ const Timeline = (() => {
   let _mode = 'vertical'; // 'vertical' | 'horizontal'
   let _onEventClick = null;
 
+  let _resizeRaf = null;
+
   function init(mode, onEventClick) {
     _mode = mode;
     _onEventClick = onEventClick;
+
+    // Recalcular conectores (líneas hacia el punto común) al redimensionar
+    window.addEventListener('resize', () => {
+      if (_resizeRaf) cancelAnimationFrame(_resizeRaf);
+      _resizeRaf = requestAnimationFrame(_drawAllConnectors);
+    });
+
+    // Redibujar cuando las fuentes terminen de cargar (cambian la altura de las tarjetas)
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(_drawAllConnectors);
+    }
   }
 
   function setMode(mode) {
@@ -46,6 +59,7 @@ const Timeline = (() => {
     const wrapper = document.createElement('div');
     wrapper.className = 'v-timeline';
 
+    let _vIndex = 0; // alternancia global izquierda/derecha
     groups.forEach(group => {
       const yearEl = document.createElement('div');
       yearEl.className = 'v-year-group';
@@ -56,25 +70,33 @@ const Timeline = (() => {
       yearBadge.textContent = group.year;
       yearEl.appendChild(yearBadge);
 
-      let cardIndex = 0;
       const months = Object.keys(group.months).sort((a,b) => +a - +b);
       if (EventsStore.getSortOrder() === 'desc') months.reverse();
       months.forEach(month => {
+        const evs = group.months[month];
+
         const monthGroup = document.createElement('div');
         monthGroup.className = 'v-month-group';
 
+        // Etiqueta de mes como título separador (encima del grupo)
         const monthLabel = document.createElement('div');
         monthLabel.className = 'v-month-label';
         monthLabel.textContent = CONFIG.MONTH_NAMES[+month];
         monthGroup.appendChild(monthLabel);
 
-        group.months[month].forEach(ev => {
-          const side = cardIndex % 2 === 0 ? 'left' : 'right';
-          const card = _createCard(ev, side);
-          monthGroup.appendChild(card);
-          cardIndex++;
+        // Nodo del mes: un único punto central + tarjetas alternando lados.
+        // Las líneas (conectores) hacia el punto se dibujan en _buildConnectors.
+        const node = document.createElement('div');
+        node.className = 'v-month-node';
+
+        node.appendChild(_createMonthDot(evs, 'v-month-dot'));
+
+        evs.forEach(ev => {
+          const side = _vIndex++ % 2 === 0 ? 'left' : 'right';
+          node.appendChild(_createVBranch(ev, side));
         });
 
+        monthGroup.appendChild(node);
         yearEl.appendChild(monthGroup);
       });
 
@@ -82,6 +104,7 @@ const Timeline = (() => {
     });
 
     container.appendChild(wrapper);
+    _refreshConnectors();
 
     // Intersection observer for scroll animations
     const observer = new IntersectionObserver(entries => {
@@ -102,7 +125,7 @@ const Timeline = (() => {
     line.className = 'h-line';
     track.appendChild(line);
 
-    let evIndex = 0;
+    let _hIndex = 0; // alternancia global arriba/abajo
     groups.forEach(group => {
       const yearMark = document.createElement('div');
       yearMark.className = 'h-year-marker';
@@ -112,17 +135,14 @@ const Timeline = (() => {
       const months = Object.keys(group.months).sort((a,b) => +a - +b);
       if (EventsStore.getSortOrder() === 'desc') months.reverse();
       months.forEach(month => {
-        group.months[month].forEach(ev => {
-          const pos = evIndex % 2 === 0 ? 'top' : 'bottom';
-          const node = _createHNode(ev, pos);
-          track.appendChild(node);
-          evIndex++;
-        });
+        const node = _createHNode(group.months[month], +month, group.year, () => _hIndex++);
+        track.appendChild(node);
       });
     });
 
     wrapper.appendChild(track);
     container.appendChild(wrapper);
+    _refreshConnectors();
 
     // Scroll & Drag logic for desktop
     let isDown = false;
@@ -174,17 +194,40 @@ const Timeline = (() => {
     container.querySelectorAll('.h-node').forEach(n => observer.observe(n));
   }
 
-  /* ─────────────────────────── CARD ─────────────────────────── */
-  function _createCard(ev, side) {
-    const wrapper = document.createElement('div');
-    wrapper.className = `v-card-wrapper side-${side}`;
+  /* ─────────────────────────── PUNTO MULTICOLOR ─────────────────────────── */
+  // Personas distintas presentes en el mes, en orden de aparición
+  function _distinctPersons(evs) {
+    const seen = [];
+    evs.forEach(ev => { if (!seen.includes(ev.person)) seen.push(ev.person); });
+    return seen;
+  }
 
+  // conic-gradient con partes iguales por persona presente
+  function _dotBackground(evs) {
+    const persons = _distinctPersons(evs);
+    if (persons.length === 1) return CONFIG.PERSONS[persons[0]].color;
+    const step = 100 / persons.length;
+    const stops = persons.map((p, i) => {
+      const c = CONFIG.PERSONS[p].color;
+      return `${c} ${(step * i).toFixed(3)}% ${(step * (i + 1)).toFixed(3)}%`;
+    });
+    return `conic-gradient(${stops.join(', ')})`;
+  }
+
+  function _createMonthDot(evs, className) {
     const dot = document.createElement('div');
-    dot.className = `v-dot person-${ev.person}`;
+    const persons = _distinctPersons(evs);
+    dot.className = className + (persons.length === 1 ? ` person-${persons[0]}` : ' is-multi');
+    dot.style.background = _dotBackground(evs);
+    return dot;
+  }
 
+  /* ─────────────────────────── CARDS ─────────────────────────── */
+  function _buildVCard(ev) {
     const card = document.createElement('div');
     card.className = `v-card person-${ev.person}`;
     card.setAttribute('data-id', ev.id);
+    card.setAttribute('data-person', ev.person);
 
     const hasImages = ev.images && ev.images.length > 0;
     const personCfg = CONFIG.PERSONS[ev.person];
@@ -205,30 +248,163 @@ const Timeline = (() => {
       </div>`;
 
     card.addEventListener('click', () => { if (_onEventClick) _onEventClick(ev.id); });
-
-    if (side === 'left') wrapper.append(card, dot);
-    else wrapper.append(dot, card);
-
-    return wrapper;
+    return card;
   }
 
-  function _createHNode(ev, pos) {
+  function _createVBranch(ev, side) {
+    const branch = document.createElement('div');
+    branch.className = `v-branch side-${side}`;
+    branch.appendChild(_buildVCard(ev));
+    return branch;
+  }
+
+  function _createHNode(evs, month, year, nextPos) {
     const node = document.createElement('div');
-    node.className = `h-node pos-${pos} person-${ev.person}`;
-    node.setAttribute('data-id', ev.id);
+    node.className = 'h-node';
+
+    node.appendChild(_createMonthDot(evs, 'h-dot'));
+
+    const label = document.createElement('div');
+    label.className = 'h-date-label';
+    label.textContent = `${CONFIG.MONTH_NAMES[month].slice(0, 3)} ${year}`;
+    node.appendChild(label);
+
+    // Tarjetas repartidas en horizontal alternando arriba/abajo (global).
+    const events = document.createElement('div');
+    events.className = 'h-events';
+    evs.forEach(ev => {
+      const pos = nextPos() % 2 === 0 ? 'top' : 'bottom';
+      events.appendChild(_createHEvent(ev, pos));
+    });
+    node.appendChild(events);
+
+    return node;
+  }
+
+  function _createHEvent(ev, pos) {
+    const cell = document.createElement('div');
+    cell.className = `h-event pos-${pos} person-${ev.person}`;
+    cell.setAttribute('data-id', ev.id);
 
     const personCfg = CONFIG.PERSONS[ev.person];
-    node.innerHTML = `
-      <div class="h-card person-${ev.person}">
+    cell.innerHTML = `
+      <div class="h-card person-${ev.person}" data-person="${ev.person}">
         <span class="h-card-title">${ev.title}</span>
         <span class="h-card-person">${personCfg.label}</span>
-      </div>
-      <div class="h-dot person-${ev.person}"></div>
-      <div class="h-stem"></div>
-      <div class="h-date-label">${CONFIG.MONTH_NAMES[ev.month].slice(0,3)} ${ev.year}</div>`;
+      </div>`;
 
-    node.addEventListener('click', () => { if (_onEventClick) _onEventClick(ev.id); });
-    return node;
+    cell.addEventListener('click', () => { if (_onEventClick) _onEventClick(ev.id); });
+    return cell;
+  }
+
+  /* ─────────────────────────── CONECTORES (LÍNEAS AL PUNTO) ─────────────────────────── */
+  const SVGNS = 'http://www.w3.org/2000/svg';
+
+  function _drawAllConnectors() {
+    const container = document.getElementById('timeline-container');
+    if (!container) return;
+    container.querySelectorAll('.v-month-node, .h-node').forEach(_buildConnectors);
+  }
+
+  // Dibuja ya y reintenta en el siguiente frame (por si el layout aún no asentó)
+  function _refreshConnectors() {
+    _drawAllConnectors();
+    requestAnimationFrame(_drawAllConnectors);
+  }
+
+  // Dibuja una línea desde cada tarjeta hacia el punto central común del mes.
+  function _buildConnectors(node) {
+    const dot = node.querySelector('.v-month-dot, .h-dot');
+    if (!dot) return;
+
+    const oldSvg = node.querySelector('svg.tl-connectors');
+    if (oldSvg) oldSvg.remove();
+
+    const w = node.offsetWidth;
+    const h = node.offsetHeight;
+    if (!w || !h) return;
+
+    const nodeRect = node.getBoundingClientRect();
+    const dotRect = dot.getBoundingClientRect();
+    const dx = dotRect.left + dotRect.width / 2 - nodeRect.left;
+    const dy = dotRect.top + dotRect.height / 2 - nodeRect.top;
+
+    const cards = node.querySelectorAll('.v-card, .h-card');
+    if (!cards.length) return;
+
+    const svg = document.createElementNS(SVGNS, 'svg');
+    svg.setAttribute('class', 'tl-connectors' + (_mode === 'horizontal' ? ' dashed' : ''));
+    svg.setAttribute('width', w);
+    svg.setAttribute('height', h);
+
+    const dirItems = []; // {angle, color} de cada tarjeta para el degradado direccional
+    cards.forEach(card => {
+      const r = card.getBoundingClientRect();
+      const left = r.left - nodeRect.left;
+      const right = r.right - nodeRect.left;
+      const top = r.top - nodeRect.top;
+      const bottom = r.bottom - nodeRect.top;
+      const cx = (left + right) / 2;
+      const cy = (top + bottom) / 2;
+
+      let px, py;
+      if (_mode === 'vertical') {
+        // Conecta el borde de la tarjeta más cercano al punto
+        if (cx >= dx) { px = left; py = cy; }
+        else { px = right; py = cy; }
+      } else {
+        if (cy <= dy) { px = cx; py = bottom; }
+        else { px = cx; py = top; }
+      }
+
+      const line = document.createElementNS(SVGNS, 'line');
+      line.setAttribute('x1', dx.toFixed(1));
+      line.setAttribute('y1', dy.toFixed(1));
+      line.setAttribute('x2', px.toFixed(1));
+      line.setAttribute('y2', py.toFixed(1));
+      svg.appendChild(line);
+
+      const person = card.getAttribute('data-person');
+      if (person && CONFIG.PERSONS[person]) {
+        dirItems.push({ angle: _angleTo(dx, dy, cx, cy), color: CONFIG.PERSONS[person].color });
+      }
+    });
+
+    // El punto se pinta orientando cada color hacia su tarjeta
+    if (dirItems.length) dot.style.background = _buildDotGradient(dirItems);
+
+    node.insertBefore(svg, node.firstChild);
+  }
+
+  // Ángulo de brújula (0 = arriba, sentido horario) desde el punto a (x, y)
+  function _angleTo(dx, dy, x, y) {
+    const a = Math.atan2(x - dx, -(y - dy)) * 180 / Math.PI;
+    return (a + 360) % 360;
+  }
+
+  // conic-gradient donde cada tarjeta posee el sector que mira hacia su dirección
+  function _buildDotGradient(items) {
+    if (items.length === 1) return items[0].color;
+    const sorted = items.slice().sort((a, b) => a.angle - b.angle);
+    const n = sorted.length;
+    const cw = (from, to) => (to - from + 360) % 360; // distancia horaria
+
+    // Límite (boundary) entre cada par de tarjetas consecutivas
+    const bounds = sorted.map((it, i) => {
+      const next = sorted[(i + 1) % n];
+      return (it.angle + cw(it.angle, next.angle) / 2) % 360;
+    });
+
+    const start = bounds[n - 1];
+    let cum = 0;
+    const stops = [];
+    for (let i = 0; i < n; i++) {
+      const prevB = bounds[(i - 1 + n) % n];
+      const len = cw(prevB, bounds[i]);
+      stops.push(`${sorted[i].color} ${cum.toFixed(2)}deg ${(cum + len).toFixed(2)}deg`);
+      cum += len;
+    }
+    return `conic-gradient(from ${start.toFixed(2)}deg, ${stops.join(', ')})`;
   }
 
   return { init, setMode, render };

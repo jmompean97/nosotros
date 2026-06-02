@@ -532,7 +532,7 @@ select.form-input option {
   position: relative;
   display: flex;
   justify-content: flex-end;
-  top: calc(var(--header-h) + 1rem);
+  top: calc(var(--header-h) / 2);
   right: 1.5rem;
   z-index: 80;
 }

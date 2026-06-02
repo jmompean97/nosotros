@@ -132,86 +132,93 @@
 }
 
 
-/* ── Wrapper de tarjeta ── */
-.v-card-wrapper {
+/* ── Nodo del mes (punto único central + ramas) ── */
+.v-month-node {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Punto multicolor central, anclado exactamente a la línea (50%) */
+.v-month-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid var(--bg0);
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  box-shadow: 0 0 0 2px var(--border), 0 0 14px hsla(265, 60%, 65%, 0.35);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.v-month-node:hover .v-month-dot {
+  transform: translate(-50%, -50%) scale(1.25);
+}
+
+.v-month-dot.person-jorge {
+  box-shadow: 0 0 0 2px var(--bg0), 0 0 16px var(--color-jorge);
+}
+
+.v-month-dot.person-gema {
+  box-shadow: 0 0 0 2px var(--bg0), 0 0 16px var(--color-gema);
+}
+
+.v-month-dot.person-juntos {
+  box-shadow: 0 0 0 2px var(--bg0), 0 0 16px var(--color-juntos);
+}
+
+
+/* ── Rama (tarjeta + tallo hacia el centro) ── */
+.v-branch {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
-  position: relative;
 }
 
-.v-card-wrapper.side-left {
+.v-branch.side-left {
   flex-direction: row;
-  padding-right: calc(50% + 1rem);
+  padding-right: calc(50% + 28px);
 }
 
-.v-card-wrapper.side-right {
-  padding-left: calc(50% + 1rem);
+.v-branch.side-right {
+  flex-direction: row;
+  padding-left: calc(50% + 28px);
+}
+
+/* Conectores SVG: líneas que van de cada tarjeta al punto común del mes */
+.tl-connectors {
+  position: absolute;
+  left: 0;
+  top: 0;
+  overflow: visible;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tl-connectors line {
+  stroke: var(--text2);
+  stroke-width: 2;
+  opacity: .4;
+}
+
+.tl-connectors.dashed line {
+  stroke-dasharray: 5 5;
 }
 
 @media (max-width: 768px) {
+  .v-month-dot {
+    left: 20px;
+  }
 
-  .v-card-wrapper.side-left,
-  .v-card-wrapper.side-right {
+  .v-branch.side-left,
+  .v-branch.side-right {
     flex-direction: row;
-    padding-left: 3rem;
+    padding-left: 48px;
     padding-right: 0;
-  }
-}
-
-
-/* ── Dot de la línea de tiempo ── */
-.v-dot {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  flex-shrink: 0;
-  background: var(--bg0);
-  border: 4px solid var(--text2);
-  transition: transform var(--transition), box-shadow var(--transition);
-  position: relative;
-  z-index: 2;
-}
-
-.v-dot.person-jorge {
-  border-color: var(--color-jorge);
-}
-
-.v-dot.person-gema {
-  border-color: var(--color-gema);
-}
-
-.v-dot.person-juntos {
-  border-color: var(--color-juntos);
-}
-
-.v-card-wrapper:hover .v-dot {
-  transform: scale(1.5);
-}
-
-.v-card-wrapper:hover .v-dot.person-jorge {
-  box-shadow: 0 0 15px var(--color-jorge);
-}
-
-.v-card-wrapper:hover .v-dot.person-gema {
-  box-shadow: 0 0 15px var(--color-gema);
-}
-
-.v-card-wrapper:hover .v-dot.person-juntos {
-  box-shadow: 0 0 15px var(--color-juntos);
-}
-
-@media (max-width: 768px) {
-  .v-dot {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .v-card-wrapper:hover .v-dot {
-    transform: translateY(-50%) scale(1.4);
   }
 }
 
@@ -228,13 +235,14 @@
   flex: 1;
   cursor: pointer;
   position: relative;
+  z-index: 2;
 
   opacity: 0;
-  transform: translateY(20px);
   transition:
     transform var(--transition),
     box-shadow var(--transition),
-    border-color var(--transition);
+    border-color var(--transition),
+    opacity var(--transition);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
@@ -480,6 +488,7 @@
   min-height: 480px;
   width: max-content;
   padding: 200px 5rem;
+  gap: .75rem;
 }
 
 .h-line {
@@ -498,13 +507,15 @@
   box-shadow: 0 0 15px hsla(340, 70%, 60%, 0.3), 0 0 30px hsla(265, 60%, 65%, 0.2);
 }
 
+/* Márgenes simétricos: la distancia del último punto de un año al primer punto
+   del siguiente es siempre la misma (los años quedan englobados). */
 .h-year-marker {
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   z-index: 2;
-  margin-right: 6rem;
+  margin: 0 3.25rem;
   width: 32px;
   height: 32px;
 }
@@ -536,121 +547,98 @@
   letter-spacing: 2px;
 }
 
+/* Nodo del mes: punto único central sobre la línea + tarjetas repartidas */
 .h-node {
   display: flex;
   align-items: center;
-  justify-content: center;
   position: relative;
-  margin-right: 5rem;
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
+  z-index: 2;
   opacity: 0;
-  transition:
-    opacity .6s cubic-bezier(.4, 0, .2, 1),
-    transform .6s cubic-bezier(.4, 0, .2, 1);
+  transition: opacity .6s cubic-bezier(.4, 0, .2, 1);
 }
 
 .h-node.visible {
   opacity: 1;
-  transform: none;
 }
 
-.h-node.pos-top {
-  transform: translateY(-15px);
-}
-
-.h-node.pos-top.visible {
-  transform: translateY(0);
-}
-
-.h-node.pos-bottom {
-  transform: translateY(15px);
-}
-
-.h-node.pos-bottom.visible {
-  transform: translateY(0);
-}
-
-.h-stem {
-  position: absolute;
-  width: 1px;
-  height: 60px;
-  border-left: 2px dashed var(--border);
-  background: transparent;
-  transition: border-color var(--transition);
-}
-
-/* POS TOP */
-.h-node.pos-top .h-card {
-  position: absolute;
-  bottom: 75px;
-}
-
-.h-node.pos-top .h-stem {
-  bottom: 12px;
-}
-
-.h-node.pos-top .h-date-label {
-  position: absolute;
-  top: 30px;
-}
-
-/* POS BOTTOM */
-.h-node.pos-bottom .h-card {
-  position: absolute;
-  top: 75px;
-}
-
-.h-node.pos-bottom .h-stem {
-  top: 12px;
-}
-
-.h-node.pos-bottom .h-date-label {
-  position: absolute;
-  bottom: 30px;
-}
-
-.h-node:hover .h-stem {
-  border-left-color: var(--text2);
-}
-
+/* Punto multicolor central (anclado al centro de las tarjetas del mes) */
 .h-dot {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  flex-shrink: 0;
+  border: 3px solid var(--bg0);
+  z-index: 3;
+  box-shadow: 0 0 0 2px var(--border), 0 0 14px hsla(265, 60%, 65%, 0.35);
   transition: transform var(--transition), box-shadow var(--transition);
-  background: var(--bg0);
-  border: 4px solid var(--text2);
-}
-
-.h-dot.person-jorge {
-  border-color: var(--color-jorge);
-}
-
-.h-node:hover .h-dot.person-jorge {
-  box-shadow: 0 0 15px var(--color-jorge);
-}
-
-.h-dot.person-gema {
-  border-color: var(--color-gema);
-}
-
-.h-node:hover .h-dot.person-gema {
-  box-shadow: 0 0 15px var(--color-gema);
-}
-
-.h-dot.person-juntos {
-  border-color: var(--color-juntos);
-}
-
-.h-node:hover .h-dot.person-juntos {
-  box-shadow: 0 0 15px var(--color-juntos);
 }
 
 .h-node:hover .h-dot {
-  transform: scale(1.5);
+  transform: translate(-50%, -50%) scale(1.25);
+}
+
+.h-dot.person-jorge {
+  box-shadow: 0 0 0 2px var(--bg0), 0 0 16px var(--color-jorge);
+}
+
+.h-dot.person-gema {
+  box-shadow: 0 0 0 2px var(--bg0), 0 0 16px var(--color-gema);
+}
+
+.h-dot.person-juntos {
+  box-shadow: 0 0 0 2px var(--bg0), 0 0 16px var(--color-juntos);
+}
+
+/* Etiqueta de fecha SOBRE el punto: fondo translúcido para que se sigan
+   viendo los colores del punto multicolor por detrás */
+.h-date-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: .68rem;
+  color: var(--text);
+  white-space: nowrap;
+  font-weight: 700;
+  letter-spacing: .02em;
+  background: var(--glass);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  padding: .12rem .5rem;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+  z-index: 4;
+  pointer-events: none;
+}
+
+/* Fila de tarjetas del mes (repartidas en horizontal, zigzag compacto) */
+.h-events {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* La celda es más estrecha que la tarjeta (180px): así las tarjetas, alternadas
+   arriba/abajo, se solapan en horizontal formando un zigzag apretado.
+   El desplazamiento vertical arriba/abajo es solo visual. */
+.h-event {
+  flex-shrink: 0;
+  width: 110px;
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.h-event.pos-top {
+  transform: translateY(-105px);
+}
+
+.h-event.pos-bottom {
+  transform: translateY(105px);
 }
 
 .h-card {
@@ -662,10 +650,12 @@
   border-radius: var(--radius);
   padding: 1.2rem;
   width: 180px;
+  flex-shrink: 0;
   text-align: center;
   transition: all var(--transition);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   position: relative;
+  z-index: 2;
   overflow: hidden;
 }
 
@@ -756,14 +746,6 @@
   color: var(--text2);
   text-transform: uppercase;
   letter-spacing: 1px;
-}
-
-.h-date-label {
-  font-size: .75rem;
-  color: var(--text2);
-  white-space: nowrap;
-  margin-top: .6rem;
-  font-weight: 500;
 }
 
 /* ─────────────────────────────────────────────────────────────
