@@ -36,7 +36,9 @@ const Timeline = (() => {
       if (!map[ev.year].months[m]) map[ev.year].months[m] = [];
       map[ev.year].months[m].push(ev);
     });
-    return Object.values(map).sort((a, b) => a.year - b.year);
+    const sorted = Object.values(map).sort((a, b) => a.year - b.year);
+    if (EventsStore.getSortOrder() === 'desc') sorted.reverse();
+    return sorted;
   }
 
   /* ─────────────────────────── VERTICAL ─────────────────────────── */
@@ -56,6 +58,7 @@ const Timeline = (() => {
 
       let cardIndex = 0;
       const months = Object.keys(group.months).sort((a,b) => +a - +b);
+      if (EventsStore.getSortOrder() === 'desc') months.reverse();
       months.forEach(month => {
         const monthGroup = document.createElement('div');
         monthGroup.className = 'v-month-group';
@@ -107,6 +110,7 @@ const Timeline = (() => {
       track.appendChild(yearMark);
 
       const months = Object.keys(group.months).sort((a,b) => +a - +b);
+      if (EventsStore.getSortOrder() === 'desc') months.reverse();
       months.forEach(month => {
         group.months[month].forEach(ev => {
           const pos = evIndex % 2 === 0 ? 'top' : 'bottom';
@@ -119,6 +123,49 @@ const Timeline = (() => {
 
     wrapper.appendChild(track);
     container.appendChild(wrapper);
+
+    // Scroll & Drag logic for desktop
+    let isDown = false;
+    let isDragging = false;
+    let startX;
+    let scrollLeft;
+
+    wrapper.addEventListener('mousedown', (e) => {
+      isDown = true;
+      isDragging = false;
+      wrapper.classList.add('is-dragging');
+      startX = e.pageX - wrapper.offsetLeft;
+      scrollLeft = wrapper.scrollLeft;
+    });
+
+    wrapper.addEventListener('mouseleave', () => {
+      isDown = false;
+      wrapper.classList.remove('is-dragging');
+    });
+
+    wrapper.addEventListener('mouseup', () => {
+      isDown = false;
+      wrapper.classList.remove('is-dragging');
+      setTimeout(() => { isDragging = false; }, 0);
+    });
+
+    wrapper.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - wrapper.offsetLeft;
+      if (Math.abs(x - startX) > 5) isDragging = true;
+      const walk = (x - startX) * 2;
+      wrapper.scrollLeft = scrollLeft - walk;
+    });
+
+    wrapper.addEventListener('click', (e) => {
+      if (isDragging) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+    }, true);
+
+
 
     // Animate
     const observer = new IntersectionObserver(entries => {
@@ -152,13 +199,11 @@ const Timeline = (() => {
         </div>
         <h3 class="card-title">${ev.title}</h3>
         <p class="card-desc">${ev.description}</p>
-        <button class="card-btn" data-id="${ev.id}">Ver más →</button>
+        <div class="card-hint">
+          <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </div>
       </div>`;
 
-    card.querySelector('.card-btn').addEventListener('click', e => {
-      e.stopPropagation();
-      if (_onEventClick) _onEventClick(ev.id);
-    });
     card.addEventListener('click', () => { if (_onEventClick) _onEventClick(ev.id); });
 
     if (side === 'left') wrapper.append(card, dot);

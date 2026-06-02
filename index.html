@@ -173,6 +173,17 @@
     </div>
   </header>
 
+  <!-- ══ TIMELINE CONTROLS ══ -->
+  <div class="sub-header-controls">
+    <button id="btn-toggle-sort" class="sub-header-btn" title="Invertir orden temporal" aria-label="Invertir orden temporal">
+      <span id="sort-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+          <path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/>
+        </svg>
+      </span>
+      <span id="sort-text">Más antiguo primero</span>
+    </button>
+  </div>
 
   <!-- ══ TIMELINE ══ -->
   <main id="timeline-container" class="timeline-vertical" aria-label="Timeline de eventos"></main>
@@ -391,16 +402,7 @@
     document.getElementById('form-cancel')?.addEventListener('click', () => {
       document.getElementById('modal-form-close')?.click();
     });
-    // Horizontal drag scroll
-    const h = document.getElementById('timeline-container');
-    let isDown = false, startX, scrollLeft;
-    h.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - h.offsetLeft; scrollLeft = h.scrollLeft; });
-    h.addEventListener('mouseleave', () => isDown = false);
-    h.addEventListener('mouseup', () => isDown = false);
-    h.addEventListener('mousemove', e => {
-      if (!isDown) return; e.preventDefault();
-      h.scrollLeft = scrollLeft - (e.pageX - h.offsetLeft - startX);
-    });
+
     // Hamburger menu toggle
     const hamburger = document.getElementById('btn-hamburger');
     const mobileMenu = document.getElementById('mobile-menu');

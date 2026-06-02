@@ -1,6 +1,7 @@
 const EventsStore = (() => {
   let _events = [];
   let _filters = { person: 'all', category: 'all', year: null, search: '' };
+  let _sortOrder = 'asc';
   const _subscribers = [];
 
   function subscribe(fn) { _subscribers.push(fn); }
@@ -14,7 +15,7 @@ const EventsStore = (() => {
   function getAll() { return [..._events]; }
 
   function getFiltered() {
-    return _events.filter(ev => {
+    let result = _events.filter(ev => {
       if (_filters.person !== 'all' && ev.person !== _filters.person) return false;
       if (_filters.category !== 'all' && ev.category !== _filters.category) return false;
       if (_filters.year && ev.year !== _filters.year) return false;
@@ -24,6 +25,19 @@ const EventsStore = (() => {
       }
       return true;
     });
+    if (_sortOrder === 'desc') {
+      result.reverse();
+    }
+    return result;
+  }
+
+  function toggleSortOrder() {
+    _sortOrder = _sortOrder === 'asc' ? 'desc' : 'asc';
+    _notify();
+  }
+
+  function getSortOrder() {
+    return _sortOrder;
   }
 
   function setFilter(key, value) {
@@ -71,5 +85,5 @@ const EventsStore = (() => {
     return [...new Set(_events.map(e => e.year))].sort();
   }
 
-  return { init, subscribe, getAll, getFiltered, getFilters, setFilter, getById, add, update, remove, getYears };
+  return { init, subscribe, getAll, getFiltered, getFilters, setFilter, getById, add, update, remove, getYears, toggleSortOrder, getSortOrder };
 })();

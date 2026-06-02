@@ -13,6 +13,19 @@ const App = (() => {
     _setupFormModal();
     _setupAuth();
 
+    document.getElementById('btn-toggle-sort')?.addEventListener('click', () => {
+      EventsStore.toggleSortOrder();
+      const btn = document.getElementById('btn-toggle-sort');
+      const order = EventsStore.getSortOrder();
+      if (order === 'desc') {
+        btn.querySelector('#sort-icon').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M17 9l-5-5-5 5"/><path d="M17 15l-5 5-5-5"/></svg>`;
+        btn.querySelector('#sort-text').textContent = 'Más reciente primero';
+      } else {
+        btn.querySelector('#sort-icon').innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><path d="M7 15l5 5 5-5"/><path d="M7 9l5-5 5 5"/></svg>`;
+        btn.querySelector('#sort-text').textContent = 'Más antiguo primero';
+      }
+    });
+
     EventsStore.subscribe(events => {
       Timeline.render(events);
       _renderYearPills();
