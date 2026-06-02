@@ -1,5 +1,5 @@
 const CONFIG = {
-  SUPABASE_URL: 'https://enxnrnqnvbprcgdcmawb.supabase.co/rest/v1/',          // URL de tu proyecto Supabase (ej. https://xxxx.supabase.co)
+  SUPABASE_URL: 'https://enxnrnqnvbprcgdcmawb.supabase.co',          // URL de tu proyecto Supabase (ej. https://xxxx.supabase.co)
   SUPABASE_KEY: 'sb_publishable_D6G4cN5hsi3I0sOTCwdH6A_JLeRYsb1',          // Clave anon/public de tu Supabase
   IMGBB_API_KEY: '',         // Añade tu API key de ImgBB: https://api.imgbb.com/
   IMGBB_ENDPOINT: 'https://api.imgbb.com/1/upload',
