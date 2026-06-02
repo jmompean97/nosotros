@@ -74,24 +74,24 @@
         <!-- Persona -->
         <div class="filter-dropdown" id="dd-persona">
           <button class="filter-dd-trigger" id="dd-persona-btn" aria-expanded="false" aria-haspopup="listbox">
-            <span id="dd-persona-label">👪 Persona</span>
+            <span id="dd-persona-label">Persona</span>
             <svg class="dd-arrow" viewBox="0 0 10 6" width="10" height="6" fill="none" stroke="currentColor"
               stroke-width="1.5" stroke-linecap="round">
               <path d="M1 1l4 4 4-4" />
             </svg>
           </button>
           <div class="filter-dd-panel" id="dd-persona-panel" hidden role="listbox">
-            <button class="filter-chip active" data-filter-person="all">Todos 👪</button>
-            <button class="filter-chip" data-filter-person="juntos">❤️ Juntos</button>
-            <button class="filter-chip" data-filter-person="jorge">👨 Jorge</button>
-            <button class="filter-chip" data-filter-person="gema">👩 Gema</button>
+            <button class="filter-chip active" data-filter-person="all">Todos</button>
+            <button class="filter-chip" data-filter-person="juntos">Juntos</button>
+            <button class="filter-chip" data-filter-person="jorge">Jorge</button>
+            <button class="filter-chip" data-filter-person="gema">Gema</button>
           </div>
         </div>
 
         <!-- Categoría -->
         <div class="filter-dropdown" id="dd-cat">
           <button class="filter-dd-trigger" id="dd-cat-btn" aria-expanded="false" aria-haspopup="listbox">
-            <span id="dd-cat-label">🗂️ Categoría</span>
+            <span id="dd-cat-label">Categoría</span>
             <svg class="dd-arrow" viewBox="0 0 10 6" width="10" height="6" fill="none" stroke="currentColor"
               stroke-width="1.5" stroke-linecap="round">
               <path d="M1 1l4 4 4-4" />
@@ -99,19 +99,19 @@
           </button>
           <div class="filter-dd-panel" id="dd-cat-panel" hidden role="listbox">
             <button class="filter-chip active" data-filter-cat="all">Todas</button>
-            <button class="filter-chip" data-filter-cat="hito">🌟 Hitos</button>
-            <button class="filter-chip" data-filter-cat="viaje">✈️ Viajes</button>
-            <button class="filter-chip" data-filter-cat="estudios">📚 Estudios</button>
-            <button class="filter-chip" data-filter-cat="trabajo">💼 Trabajo</button>
-            <button class="filter-chip" data-filter-cat="vida">🌿 Vida</button>
-            <button class="filter-chip" data-filter-cat="familia">👨‍👩‍👧 Familia</button>
+            <button class="filter-chip" data-filter-cat="hito">Hitos</button>
+            <button class="filter-chip" data-filter-cat="viaje">Viajes</button>
+            <button class="filter-chip" data-filter-cat="estudios">Estudios</button>
+            <button class="filter-chip" data-filter-cat="trabajo">Trabajo</button>
+            <button class="filter-chip" data-filter-cat="vida">Vida</button>
+            <button class="filter-chip" data-filter-cat="familia">Familia</button>
           </div>
         </div>
 
         <!-- Año -->
         <div class="filter-dropdown" id="dd-year">
           <button class="filter-dd-trigger" id="dd-year-btn" aria-expanded="false" aria-haspopup="listbox">
-            <span id="dd-year-label">📅 Año</span>
+            <span id="dd-year-label">Año</span>
             <svg class="dd-arrow" viewBox="0 0 10 6" width="10" height="6" fill="none" stroke="currentColor"
               stroke-width="1.5" stroke-linecap="round">
               <path d="M1 1l4 4 4-4" />
@@ -194,8 +194,11 @@
         <span class="footer-logo-j">J</span>
       </div>
       <p class="footer-text">
-        &copy; <span id="current-year">2026</span> <strong>Gema & Jorge</strong>. Todos los derechos reservados.
+        &copy; <span id="current-year"></span> <strong>Gema & Jorge</strong>. Todos los derechos reservados.
       </p>
+      <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+      </script>
       <p class="footer-subtext">Hecho con ♥ para recordar cada uno de nuestros momentos.</p>
     </div>
   </footer>
@@ -380,12 +383,6 @@
   <script src="assets/js/timeline.js"></script>
   <script src="assets/js/app.js"></script>
   <script>
-    // Set dynamic current year in footer
-    const currentYearEl = document.getElementById('current-year');
-    if (currentYearEl) {
-      currentYearEl.textContent = new Date().getFullYear();
-    }
-
     // FAB mobile
     document.getElementById('fab-add')?.addEventListener('click', () => {
       document.getElementById('btn-add-event')?.click();

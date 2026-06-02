@@ -83,7 +83,7 @@ const App = (() => {
         EventsStore.setFilter('person', btn.dataset.filterPerson);
         // Actualizar label del trigger
         const label = document.getElementById('dd-persona-label');
-        if (label) label.textContent = btn.dataset.filterPerson === 'all' ? '👪 Persona' : btn.textContent;
+        if (label) label.textContent = btn.dataset.filterPerson === 'all' ? 'Persona' : btn.textContent;
         // Cerrar dropdown
         document.getElementById('dd-persona-panel')?.setAttribute('hidden', '');
         document.getElementById('dd-persona-btn')?.setAttribute('aria-expanded', 'false');
@@ -97,7 +97,7 @@ const App = (() => {
         EventsStore.setFilter('category', btn.dataset.filterCat);
         // Actualizar label del trigger
         const label = document.getElementById('dd-cat-label');
-        if (label) label.textContent = btn.dataset.filterCat === 'all' ? '🗂️ Categoría' : btn.textContent;
+        if (label) label.textContent = btn.dataset.filterCat === 'all' ? 'Categoría' : btn.textContent;
         // Cerrar dropdown
         document.getElementById('dd-cat-panel')?.setAttribute('hidden', '');
         document.getElementById('dd-cat-btn')?.setAttribute('aria-expanded', 'false');
@@ -126,7 +126,7 @@ const App = (() => {
         EventsStore.setFilter('year', val);
         // Actualizar label del trigger
         const label = document.getElementById('dd-year-label');
-        if (label) label.textContent = val ? `📅 ${btn.textContent}` : '📅 Año';
+        if (label) label.textContent = val ? btn.textContent : 'Año';
         // Cerrar dropdown
         document.getElementById('dd-year-panel')?.setAttribute('hidden', '');
         document.getElementById('dd-year-btn')?.setAttribute('aria-expanded', 'false');
