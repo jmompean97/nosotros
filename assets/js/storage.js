@@ -21,6 +21,39 @@ const Storage = (() => {
     if (error) throw error;
   }
 
+  function _toDbSchema(ev) {
+    const dbEv = {};
+    if (ev.id !== undefined) dbEv.id = ev.id;
+    if (ev.date !== undefined) dbEv.date = ev.date;
+    if (ev.year !== undefined) dbEv.year = parseInt(ev.year) || new Date(ev.date).getFullYear();
+    if (ev.month !== undefined) dbEv.month = parseInt(ev.month) || (new Date(ev.date).getMonth() + 1);
+    if (ev.title !== undefined) dbEv.title = ev.title;
+    if (ev.description !== undefined) dbEv.description = ev.description;
+    if (ev.person !== undefined) dbEv.person = ev.person;
+    if (ev.category !== undefined) dbEv.category = ev.category;
+    if (ev.emoji !== undefined) dbEv.emoji = ev.emoji;
+    if (ev.images !== undefined) dbEv.images = Array.isArray(ev.images) ? ev.images : [];
+    
+    // Map camelCase (App) to snake_case (Database), omit tags
+    if (ev.createdAt !== undefined) dbEv.created_at = ev.createdAt;
+    else if (ev.created_at !== undefined) dbEv.created_at = ev.created_at;
+    
+    if (ev.updatedAt !== undefined) dbEv.updated_at = ev.updatedAt;
+    else if (ev.updated_at !== undefined) dbEv.updated_at = ev.updated_at;
+    
+    return dbEv;
+  }
+
+  function _toAppSchema(dbEv) {
+    if (!dbEv) return null;
+    return {
+      ...dbEv,
+      createdAt: dbEv.created_at || dbEv.createdAt,
+      updatedAt: dbEv.updated_at || dbEv.updatedAt,
+      tags: dbEv.tags || []
+    };
+  }
+
   async function load() {
     if (_supabase) {
       try {
@@ -29,8 +62,9 @@ const Storage = (() => {
           .select('*')
           .order('date', { ascending: true });
         if (error) throw error;
-        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
-        return data;
+        const mappedData = data.map(_toAppSchema);
+        localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(mappedData));
+        return mappedData;
       } catch(e) {
         console.error('Supabase load failed, falling back to local:', e);
       }
@@ -38,13 +72,14 @@ const Storage = (() => {
     
     const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
     if (raw) {
-      try { return JSON.parse(raw); } catch(e) {}
+      try { return JSON.parse(raw).map(_toAppSchema); } catch(e) {}
     }
     try {
       const r = await fetch(CONFIG.DATA_PATH);
       const data = await r.json();
-      localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
-      return data;
+      const mappedData = data.map(_toAppSchema);
+      localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(mappedData));
+      return mappedData;
     } catch(e) {
       console.error('Error loading events:', e);
       return [];
@@ -54,7 +89,8 @@ const Storage = (() => {
   // Supabase mutations
   async function addEvent(ev) {
     if (_supabase) {
-      const { error } = await _supabase.from('events').insert([ev]);
+      const dbEv = _toDbSchema(ev);
+      const { error } = await _supabase.from('events').insert([dbEv]);
       if (error) throw error;
     }
     const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
@@ -66,7 +102,8 @@ const Storage = (() => {
 
   async function updateEvent(id, ev) {
     if (_supabase) {
-      const { error } = await _supabase.from('events').update(ev).eq('id', id);
+      const dbEv = _toDbSchema(ev);
+      const { error } = await _supabase.from('events').update(dbEv).eq('id', id);
       if (error) throw error;
     }
     const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
@@ -113,23 +150,8 @@ const Storage = (() => {
 
       // 2. Insertar en lote los nuevos registros importados
       if (events && events.length > 0) {
-        const cleanEvents = events.map(e => ({
-          id: e.id,
-          date: e.date,
-          year: parseInt(e.year) || new Date(e.date).getFullYear(),
-          month: parseInt(e.month) || (new Date(e.date).getMonth() + 1),
-          title: e.title || '',
-          description: e.description || '',
-          person: e.person || 'juntos',
-          category: e.category || 'vida',
-          emoji: e.emoji || '',
-          images: Array.isArray(e.images) ? e.images : [],
-          tags: Array.isArray(e.tags) ? e.tags : [],
-          createdAt: e.createdAt || new Date().toISOString(),
-          updatedAt: e.updatedAt || new Date().toISOString()
-        }));
-
-        const { error: insertError } = await _supabase.from('events').insert(cleanEvents);
+        const dbEvents = events.map(_toDbSchema);
+        const { error: insertError } = await _supabase.from('events').insert(dbEvents);
         if (insertError) throw insertError;
       }
     }
