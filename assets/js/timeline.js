@@ -298,6 +298,8 @@ const Timeline = (() => {
     const multiImg = hasImages && ev.images.length > 1;
     const coverAtBottom = pos === 'bottom';
 
+    if (hasImages) cell.classList.add('has-img');
+
     const coverHTML = hasImages ? `<div class="h-card-cover${multiImg ? ' is-carousel' : ''}${coverAtBottom ? ' cover-bottom' : ''}">
       ${ev.images.map((img, i) =>
         `<img src="${img.thumb || img.url}" alt="${ev.title}" loading="lazy" class="h-carousel-img${i === 0 ? ' active' : ''}">`

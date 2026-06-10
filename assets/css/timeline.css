@@ -637,8 +637,16 @@
   transform: translateY(-105px);
 }
 
+.h-event.pos-top.has-img {
+  transform: translateY(-175px);
+}
+
 .h-event.pos-bottom {
   transform: translateY(105px);
+}
+
+.h-event.pos-bottom.has-img {
+  transform: translateY(175px);
 }
 
 .h-card {
