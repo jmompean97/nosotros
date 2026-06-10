@@ -3,6 +3,12 @@ const Timeline = (() => {
   let _onEventClick = null;
 
   let _resizeRaf = null;
+  let _carouselIntervals = []; // IDs de setInterval activos de carruseles
+
+  function _clearCarousels() {
+    _carouselIntervals.forEach(id => clearInterval(id));
+    _carouselIntervals = [];
+  }
 
   function init(mode, onEventClick) {
     _mode = mode;
@@ -27,6 +33,7 @@ const Timeline = (() => {
   }
 
   function render(events) {
+    _clearCarousels(); // Limpiar carruseles previos antes de re-renderizar
     const container = document.getElementById('timeline-container');
     container.innerHTML = '';
     container.className = 'timeline-' + _mode;
@@ -287,11 +294,38 @@ const Timeline = (() => {
     cell.setAttribute('data-id', ev.id);
 
     const personCfg = CONFIG.PERSONS[ev.person];
+    const hasImages = ev.images && ev.images.length > 0;
+    const multiImg  = hasImages && ev.images.length > 1;
+
     cell.innerHTML = `
-      <div class="h-card person-${ev.person}" data-person="${ev.person}">
+      <div class="h-card person-${ev.person}${hasImages ? ' has-cover' : ''}" data-person="${ev.person}">
+        ${hasImages ? `<div class="h-card-cover${multiImg ? ' is-carousel' : ''}">
+          ${ev.images.map((img, i) =>
+            `<img src="${img.thumb || img.url}" alt="${ev.title}" loading="lazy" class="h-carousel-img${i === 0 ? ' active' : ''}">`
+          ).join('')}
+          ${multiImg ? `<span class="h-card-cover-count">📷 ${ev.images.length}</span>` : '<span class="h-card-cover-count">📷</span>'}
+          ${multiImg ? '<div class="h-carousel-dots">' +
+            ev.images.map((_, i) => `<span class="h-carousel-dot${i === 0 ? ' active' : ''}"></span>`).join('') +
+            '</div>' : ''}
+        </div>` : ''}
         <span class="h-card-title">${ev.title}</span>
         <span class="h-card-person">${personCfg.label}</span>
       </div>`;
+
+    // Arrancar carrusel automático si hay más de 1 imagen
+    if (multiImg) {
+      const imgs = cell.querySelectorAll('.h-carousel-img');
+      const dots = cell.querySelectorAll('.h-carousel-dot');
+      let idx = 0;
+      const id = setInterval(() => {
+        imgs[idx].classList.remove('active');
+        dots[idx].classList.remove('active');
+        idx = (idx + 1) % imgs.length;
+        imgs[idx].classList.add('active');
+        dots[idx].classList.add('active');
+      }, 2000);
+      _carouselIntervals.push(id);
+    }
 
     cell.addEventListener('click', () => { if (_onEventClick) _onEventClick(ev.id); });
     return cell;
