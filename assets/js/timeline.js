@@ -241,7 +241,7 @@ const Timeline = (() => {
     const catCfg = CONFIG.CATEGORIES[ev.category] || { emoji: '•' };
 
     card.innerHTML = `
-      ${hasImages ? `<div class="card-cover"><img src="${ev.images[0].thumb || ev.images[0].url}" alt="${ev.title}" loading="lazy"><div class="card-cover-count">${ev.images.length > 1 ? `${ev.images.length} fotos` : ''}</div></div>` : ''}
+      ${hasImages ? `<div class="card-cover"><img src="${ev.images[0].thumb || ev.images[0].url}" alt="${ev.title}" loading="lazy"></div>` : ''}
       <div class="card-body">
         <div class="card-meta">
           <span class="card-person person-badge-${ev.person}">${personCfg.label}</span>
@@ -302,8 +302,8 @@ const Timeline = (() => {
 
     const coverHTML = hasImages ? `<div class="h-card-cover${multiImg ? ' is-carousel' : ''}${coverAtBottom ? ' cover-bottom' : ''}">
       ${ev.images.map((img, i) =>
-        `<img src="${img.thumb || img.url}" alt="${ev.title}" loading="lazy" class="h-carousel-img${i === 0 ? ' active' : ''}">`
-      ).join('')}
+      `<img src="${img.thumb || img.url}" alt="${ev.title}" loading="lazy" class="h-carousel-img${i === 0 ? ' active' : ''}">`
+    ).join('')}
       ${multiImg ? '<div class="h-carousel-dots">' +
         ev.images.map((_, i) => `<span class="h-carousel-dot${i === 0 ? ' active' : ''}"></span>`).join('') +
         '</div>' : ''}
