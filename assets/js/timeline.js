@@ -77,7 +77,7 @@ const Timeline = (() => {
       yearBadge.textContent = group.year;
       yearEl.appendChild(yearBadge);
 
-      const months = Object.keys(group.months).sort((a,b) => +a - +b);
+      const months = Object.keys(group.months).sort((a, b) => +a - +b);
       if (EventsStore.getSortOrder() === 'desc') months.reverse();
       months.forEach(month => {
         const evs = group.months[month];
@@ -115,7 +115,7 @@ const Timeline = (() => {
 
     // Intersection observer for scroll animations
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
     }, { threshold: 0.1 });
     container.querySelectorAll('.v-card').forEach(c => observer.observe(c));
   }
@@ -139,7 +139,7 @@ const Timeline = (() => {
       yearMark.innerHTML = `<div class="h-year-dot"></div><span>${group.year}</span>`;
       track.appendChild(yearMark);
 
-      const months = Object.keys(group.months).sort((a,b) => +a - +b);
+      const months = Object.keys(group.months).sort((a, b) => +a - +b);
       if (EventsStore.getSortOrder() === 'desc') months.reverse();
       months.forEach(month => {
         const node = _createHNode(group.months[month], +month, group.year, () => _hIndex++);
@@ -196,7 +196,7 @@ const Timeline = (() => {
 
     // Animate
     const observer = new IntersectionObserver(entries => {
-      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
     }, { threshold: 0.1 });
     container.querySelectorAll('.h-node').forEach(n => observer.observe(n));
   }
@@ -295,21 +295,25 @@ const Timeline = (() => {
 
     const personCfg = CONFIG.PERSONS[ev.person];
     const hasImages = ev.images && ev.images.length > 0;
-    const multiImg  = hasImages && ev.images.length > 1;
+    const multiImg = hasImages && ev.images.length > 1;
+    const coverAtBottom = pos === 'bottom';
+
+    const coverHTML = hasImages ? `<div class="h-card-cover${multiImg ? ' is-carousel' : ''}${coverAtBottom ? ' cover-bottom' : ''}">
+      ${ev.images.map((img, i) =>
+        `<img src="${img.thumb || img.url}" alt="${ev.title}" loading="lazy" class="h-carousel-img${i === 0 ? ' active' : ''}">`
+      ).join('')}
+      ${multiImg ? '<div class="h-carousel-dots">' +
+        ev.images.map((_, i) => `<span class="h-carousel-dot${i === 0 ? ' active' : ''}"></span>`).join('') +
+        '</div>' : ''}
+    </div>` : '';
+
+    const textHTML = `
+      <span class="h-card-title">${ev.title}</span>
+      <span class="h-card-person">${personCfg.label}</span>`;
 
     cell.innerHTML = `
-      <div class="h-card person-${ev.person}${hasImages ? ' has-cover' : ''}" data-person="${ev.person}">
-        ${hasImages ? `<div class="h-card-cover${multiImg ? ' is-carousel' : ''}">
-          ${ev.images.map((img, i) =>
-            `<img src="${img.thumb || img.url}" alt="${ev.title}" loading="lazy" class="h-carousel-img${i === 0 ? ' active' : ''}">`
-          ).join('')}
-          ${multiImg ? `<span class="h-card-cover-count">📷 ${ev.images.length}</span>` : '<span class="h-card-cover-count">📷</span>'}
-          ${multiImg ? '<div class="h-carousel-dots">' +
-            ev.images.map((_, i) => `<span class="h-carousel-dot${i === 0 ? ' active' : ''}"></span>`).join('') +
-            '</div>' : ''}
-        </div>` : ''}
-        <span class="h-card-title">${ev.title}</span>
-        <span class="h-card-person">${personCfg.label}</span>
+      <div class="h-card person-${ev.person}${hasImages ? ' has-cover' : ''}${coverAtBottom ? ' cover-bottom' : ''}" data-person="${ev.person}">
+        ${coverAtBottom ? textHTML + coverHTML : coverHTML + textHTML}
       </div>`;
 
     // Arrancar carrusel automático si hay más de 1 imagen
