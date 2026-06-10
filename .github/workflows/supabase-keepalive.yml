@@ -1,0 +1,27 @@
+name: Supabase Keep-Alive
+
+on:
+  schedule:
+    # Ejecutar cada 5 días a las 08:00 UTC
+    - cron: '0 8 */5 * *'
+  workflow_dispatch: # Permite lanzarlo manualmente desde GitHub si hace falta
+
+jobs:
+  ping:
+    name: Ping Supabase
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping Supabase REST API
+        run: |
+          echo "Haciendo ping a Supabase..."
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "apikey: ${{ secrets.SUPABASE_KEY }}" \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/")
+          echo "HTTP status: $STATUS"
+          if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
+            echo "✅ Ping exitoso. El proyecto Supabase sigue activo."
+          else
+            echo "⚠️ Ping devolvió status $STATUS. Puede que el proyecto esté pausado."
+            exit 1
+          fi
