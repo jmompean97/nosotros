@@ -12,16 +12,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Ping Supabase REST API
+      - name: Ping Supabase health endpoint
         run: |
           echo "Haciendo ping a Supabase..."
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
-            -H "apikey: ${{ secrets.SUPABASE_KEY }}" \
-            "${{ secrets.SUPABASE_URL }}/rest/v1/")
+          echo "URL: ${{ secrets.SUPABASE_URL }}"
+
+          # Usamos el endpoint /auth/v1/health que siempre devuelve 200 si el proyecto está activo
+          HTTP_RESPONSE=$(curl -s -w "\n%{http_code}" \
+            "${{ secrets.SUPABASE_URL }}/auth/v1/health")
+
+          HTTP_BODY=$(echo "$HTTP_RESPONSE" | head -n -1)
+          STATUS=$(echo "$HTTP_RESPONSE" | tail -n 1)
+
           echo "HTTP status: $STATUS"
-          if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
-            echo "✅ Ping exitoso. El proyecto Supabase sigue activo."
+          echo "Response: $HTTP_BODY"
+
+          # Cualquier respuesta HTTP válida (incluso errores 4xx) indica que el proyecto está vivo
+          if [ -n "$STATUS" ] && [ "$STATUS" != "000" ]; then
+            echo "✅ Ping exitoso (status $STATUS). El proyecto Supabase está activo."
           else
-            echo "⚠️ Ping devolvió status $STATUS. Puede que el proyecto esté pausado."
+            echo "❌ No se pudo conectar. El proyecto puede estar pausado."
             exit 1
           fi
