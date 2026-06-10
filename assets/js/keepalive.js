@@ -10,13 +10,11 @@ const SupabaseKeepAlive = (() => {
   async function _ping() {
     if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_KEY) return;
 
-    const url = `${CONFIG.SUPABASE_URL}/rest/v1/?apikey=${CONFIG.SUPABASE_KEY}`;
     try {
-      await fetch(url, { method: 'HEAD' });
+      await fetch(`${CONFIG.SUPABASE_URL}/auth/v1/health`);
       localStorage.setItem(STORAGE_KEY, Date.now().toString());
-      console.log('[KeepAlive] Ping a Supabase OK —', new Date().toLocaleString('es-ES'));
-    } catch (err) {
-      console.warn('[KeepAlive] No se pudo hacer ping a Supabase:', err.message);
+    } catch {
+      // silencioso — si falla, simplemente lo intentará en la próxima visita
     }
   }
 
